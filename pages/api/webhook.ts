@@ -22,10 +22,10 @@ export default function handler(
     // Trigger some action in your application
     console.log("Received webhook data:", data, JSON.stringify(data, null, 2));
     console.log('[res.socket.server]', res.io)
-    // .on("sendNotification", (data) => {
+    // socket.on("sendNotification", (data) => {
     //   console.log(`BROADCASTING NOTIFICATION`);
     //   io.emit("notification", data);
-    // });socket
+    // });
 
     // Respond with a success message
     res.status(200).json({ message: "Webhook received" });

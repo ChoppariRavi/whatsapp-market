@@ -1,4 +1,4 @@
-import { connectSocket, receiveNotifications } from "@/utils/socket";
+import socketClient from "@/utils/socket";
 import React from "react";
 
 export default function WebhookPage() {
@@ -7,18 +7,21 @@ export default function WebhookPage() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      await connectSocket();
+      const socket = await socketClient();
+      
+      socket.on("connect", () => {
+        setIsConnected(true);
+        setTransport(socket.io.engine.transport.name);
+
+        socket.io.engine.on("upgrade", (transport) => {
+          setTransport(transport.name);
+        });
+      })
+      
     };
     fetchData();
   }, []);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const messages: any = await receiveNotifications();
-      console.log('[messages]', messages)
-    };
-    fetchData();
-  });
   return (
     <div>
       <h1>Webhook Data:</h1>
