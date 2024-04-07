@@ -6,9 +6,8 @@ export default function WebhookPage() {
   const [transport, setTransport] = React.useState("N/A");
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      const socket = await socketClient();
-      
+    const socket = socketClient();
+    const onConnect = () => {
       socket.on("connect", () => {
         setIsConnected(true);
         setTransport(socket.io.engine.transport.name);
@@ -16,10 +15,21 @@ export default function WebhookPage() {
         socket.io.engine.on("upgrade", (transport) => {
           setTransport(transport.name);
         });
-      })
-      
+      });
     };
-    fetchData();
+
+    function onDisconnect() {
+      setIsConnected(false);
+      setTransport("N/A");
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
   }, []);
 
   return (

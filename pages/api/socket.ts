@@ -52,16 +52,16 @@ export default function SocketHandler(
       console.log("socket disconnect");
     });
   });
-  res = {
-    ...res,
-    socket: {
-      ...res.socket,
-      server: {
-        ...res.socket.server,
-        io,
-      },
-    },
-  };
+//   res = {
+//     ...res,
+//     socket: {
+//       ...res.socket,
+//       server: {
+//         ...res.socket.server,
+//         io,
+//       },
+//     },
+//   };
   res.status(201).json({
     success: true,
     message: "Socket is started",
