@@ -55,9 +55,9 @@ export default function SocketHandler(
   res = {
     ...res,
     socket: {
-      ...res.socket,
+      ...(res?.socket || {}),
       server: {
-        ...res.socket.server,
+        ...(res.socket?.server || {}),
         io,
       },
     },
