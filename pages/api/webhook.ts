@@ -8,6 +8,7 @@ export default function handler(
       end: { (arg0: string): void; new (): any };
     };
     setHeader: (arg0: string, arg1: string[]) => void;
+    send: any
   }
 ) {
   if (req.method === "POST") {
@@ -29,7 +30,8 @@ export default function handler(
 
     if (mode && token) {
       if (mode === "subscribe") {
-        res.status(200).json({ message: "Success!" });
+        res.status(200)
+        res.send(challange);
       } else {
         res.status(403).end(`Method ${req.method} Not Allowed`);
       }
