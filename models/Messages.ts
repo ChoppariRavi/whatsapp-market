@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-mongoose.models = {};
+Object.keys(mongoose.models).forEach((modelName) => {
+  delete mongoose.models[modelName];
+});
 
 const MessagesSchema = new mongoose.Schema({
   object: String,
