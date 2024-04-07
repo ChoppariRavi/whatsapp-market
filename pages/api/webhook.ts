@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import MessagesModel from "../../models/Messages";
 import { connectToDatabase } from "../../utils/db";
 
