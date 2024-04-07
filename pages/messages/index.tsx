@@ -1,44 +1,29 @@
-import socketClient from "@/utils/socket";
 import React from "react";
+import { connectToDatabase } from "../../utils/db";
+import MessagesModel from "../../models/Messages";
 
-export default function WebhookPage() {
+export default function WebhookPage({ data }: any) {
   const [isConnected, setIsConnected] = React.useState(false);
   const [transport, setTransport] = React.useState("N/A");
 
-  React.useEffect(() => {
-    const socket = socketClient();
-    const onConnect = () => {
-      socket.on("connect", () => {
-        setIsConnected(true);
-        setTransport(socket.io.engine.transport.name);
-
-        socket.io.engine.on("upgrade", (transport) => {
-          setTransport(transport.name);
-        });
-      });
-    };
-
-    function onDisconnect() {
-      setIsConnected(false);
-      setTransport("N/A");
-    }
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-    };
-  }, []);
+  React.useEffect(() => {}, []);
 
   return (
     <div>
       <h1>Webhook Data:</h1>
-      <p>Status: {isConnected ? "connected" : "disconnected"}</p>
-      <p>Transport: {transport}</p>
+      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </div>
   );
+}
+
+export async function getStaticProps() {
+  await connectToDatabase();
+  const res: any = await MessagesModel.find();
+  return {
+    props: {
+      data: JSON.parse(JSON.stringify(res)),
+    },
+  };
 }
 
 // curl -i -X POST \

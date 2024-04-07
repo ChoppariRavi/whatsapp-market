@@ -1,4 +1,8 @@
-import { Server, Socket } from "socket.io";
+import mongoose from "mongoose";
+import MessagesModel from "../../models/Messages";
+import { connectToDatabase } from "../../utils/db";
+
+connectToDatabase();
 
 export default function handler(
   req: { method: string; body: any; query: any },
@@ -21,11 +25,17 @@ export default function handler(
 
     // Trigger some action in your application
     console.log("Received webhook data:", data, JSON.stringify(data, null, 2));
-    console.log('[res.socket.server]', res.socket)
-    // socket.on("sendNotification", (data) => {
-    //   console.log(`BROADCASTING NOTIFICATION`);
-    //   io.emit("notification", data);
-    // });
+    const newMessage = new MessagesModel({
+      ...data,
+    });
+    newMessage
+      .save()
+      .then(() => {
+        console.log("Message saved successfully");
+      })
+      .catch((err: any) => {
+        console.error("Error saving user:", err);
+      });
 
     // Respond with a success message
     res.status(200).json({ message: "Webhook received" });
