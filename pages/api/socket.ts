@@ -27,7 +27,7 @@ export default function SocketHandler(
   _req: NextApiRequest,
   res: NextApiResponseWithSocket
 ) {
-  if (res.socket.server.io) {
+  if (res?.socket?.server?.io) {
     res.status(200).json({
       success: true,
       message: "Socket is already running",
@@ -52,7 +52,6 @@ export default function SocketHandler(
       console.log("socket disconnect");
     });
   });
-
   res.socket.server.io = io;
   res.status(201).json({
     success: true,
