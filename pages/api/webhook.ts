@@ -1,5 +1,5 @@
 export default function handler(
-  req: { method: string; body: any, query: any },
+  req: { method: string; body: any; query: any },
   res: {
     status: (arg0: number) => {
       (): any;
@@ -29,10 +29,12 @@ export default function handler(
 
     if (mode && token) {
       if (mode === "subscribe") {
-        res.status(200).json(challange);
+        res.status(200).json({ message: "Success!" });
       } else {
-        res.status(403);
+        res.status(403).end(`Method ${req.method} Not Allowed`);
       }
+    } else {
+      res.status(200).json({ message: "Hello World" });
     }
   }
 }
