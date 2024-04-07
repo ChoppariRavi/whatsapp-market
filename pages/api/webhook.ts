@@ -1,5 +1,5 @@
 export default function handler(
-  req: { method: string; body: any },
+  req: { method: string; body: any, query: any },
   res: {
     status: (arg0: number) => {
       (): any;
@@ -21,7 +21,18 @@ export default function handler(
     res.status(200).json({ message: "Webhook received" });
   } else {
     // Return a 405 Method Not Allowed if the request method is not POST
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    // res.setHeader("Allow", ["POST"]);
+    // res.status(405).end(`Method ${req.method} Not Allowed`);
+    let mode = req?.query?.["hub.mode"];
+    let challange = req?.query?.["hub.challenge"];
+    let token = req?.query?.["hub.verify_token"];
+
+    if (mode && token) {
+      if (mode === "subscribe") {
+        res.status(200).json(challange);
+      } else {
+        res.status(403);
+      }
+    }
   }
 }
