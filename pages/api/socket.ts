@@ -18,7 +18,6 @@ const socketHandler = (req:any, res:any) => {
     console.log('Socket is initializing')
     console.log('[res.socket.server]', res.socket?.server || 3030)
     const io = new Server(res.socket?.server || 3030)
-    console.log('[res.socket.server]', res.socket.server)
     res.socket.server.io = io
 
     io.on('connection', socket => {
