@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+mongoose.models = {};
+
 const MessagesSchema = new mongoose.Schema({
   object: String,
   entry: [
@@ -15,7 +17,6 @@ const MessagesSchema = new mongoose.Schema({
   ],
 });
 
-const MessagesModel =
-  mongoose.models.messages || mongoose.model("messages", MessagesSchema);
+const MessagesModel = mongoose.model("messages", MessagesSchema);
 
 export default MessagesModel;
