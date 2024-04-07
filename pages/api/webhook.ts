@@ -12,6 +12,7 @@ export default function handler(
     setHeader: (arg0: string, arg1: string[]) => void;
     socket: any;
     send: any;
+    io: any;
   }
 ) {
   if (req.method === "POST") {
