@@ -12,7 +12,7 @@ export const config = {
 
 const socketHandler = (req:any, res:any) => {
   if (res?.socket?.server?.io) {
-    // console.log('[res.socket.server]', res.socket.server)
+    console.log('[res.socket.server]', res.socket.server.io)
     console.log('Socket is already running')
   } else {
     console.log('Socket is initializing')
