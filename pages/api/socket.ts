@@ -25,7 +25,7 @@ interface NextApiResponseWithSocket extends NextApiResponse {
 }
 export default function SocketHandler(
   _req: NextApiRequest,
-  res: NextApiResponseWithSocket
+  res: any
 ) {
   if (res?.socket?.server?.io) {
     res.status(200).json({
@@ -52,16 +52,16 @@ export default function SocketHandler(
       console.log("socket disconnect");
     });
   });
-//   res = {
-//     ...res,
-//     socket: {
-//       ...res.socket,
-//       server: {
-//         ...res.socket.server,
-//         io,
-//       },
-//     },
-//   };
+  res = {
+    ...res,
+    socket: {
+      ...res.socket,
+      server: {
+        ...res.socket.server,
+        io,
+      },
+    },
+  };
   res.status(201).json({
     success: true,
     message: "Socket is started",
