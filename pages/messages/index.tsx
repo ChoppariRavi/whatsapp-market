@@ -1,23 +1,35 @@
-export async function getServerSideProps(context: any) {
-  const { id } = context.query;
+import { connectSocket, receiveNotifications } from "@/utils/socket";
+import React from "react";
 
-  // Fetch webhook data from your API route
-  const res = await fetch(`http://localhost:3000/api/webhooks/${id}`);
-  const data = await res.json();
+export default function WebhookPage() {
+  const [isConnected, setIsConnected] = React.useState(false);
+  const [transport, setTransport] = React.useState("N/A");
 
-  // Pass the webhook data to the page component
-  return {
-    props: {
-      webhookData: data,
-    },
-  };
-}
+  React.useEffect(() => {
+    const fetchData = async () => {
+      await connectSocket();
+    };
+    fetchData();
+  }, []);
 
-export default function WebhookPage({ webhookData }: any) {
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const messages: any = await receiveNotifications();
+      console.log('[messages]', messages)
+    };
+    fetchData();
+  });
   return (
     <div>
       <h1>Webhook Data:</h1>
-      {webhookData && <pre>{JSON.stringify(webhookData, null, 2)}</pre>}
+      <p>Status: {isConnected ? "connected" : "disconnected"}</p>
+      <p>Transport: {transport}</p>
     </div>
   );
 }
+
+// curl -i -X POST \
+//   https://graph.facebook.com/v18.0/308547638998207/messages \
+//   -H 'Authorization: Bearer EAAPpeIMSUhEBO7CF4B9kc3mDKhSGT62r1KMTniQn9N8TyPI64m08zB2NyNH7nJmv6y8rDga8ZBFUszZCqiGxUukwYWEuxYhGAOJLGTBAZCtC9T4fpECnE8g9ZAQTWpYZBcahJzm4QnDTBjZBZA0TeeVKZByhJjqrDPM71uFyEOkvwq2afhnUSuU5vLXrYsJDX3edqFSIGlISVIgnzXVlkY4ZD' \
+//   -H 'Content-Type: application/json' \
+//   -d '{ "messaging_product": "whatsapp", "to": "", "type": "template", "template": { "name": "hello_world", "language": { "code": "en_US" } } }'
