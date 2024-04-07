@@ -16,7 +16,7 @@ export default function handler(
     const data = req.body;
 
     // Trigger some action in your application
-    console.log("Received webhook data:", data);
+    console.log("Received webhook data:", data, JSON.stringify(data,null,2));
 
     // Respond with a success message
     res.status(200).json({ message: "Webhook received" });
