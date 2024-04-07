@@ -11,12 +11,13 @@ export const config = {
 };
 
 const socketHandler = (req:any, res:any) => {
+    console.log('[res.socket.server]', res)
   if (res?.socket?.server?.io) {
     console.log('[res.socket.server]', res.socket.server.io)
     console.log('Socket is already running')
   } else {
     console.log('Socket is initializing')
-    console.log('[res.socket.server]', res.socket?.server || 3030)
+    console.log('[res.socket.server]', res.scoket, res.socket?.server || 3030)
     const io = new Server(res.socket?.server || 3030)
     res.socket.server.io = io
 
