@@ -55,13 +55,9 @@ export default function WebhookPage({ data }: any) {
         method: "GET",
         url: res.data.url,
         headers: {
-          // "Content-Type": "application/json",
           Authorization: `Bearer EAAPpeIMSUhEBO2J5SNOw3ZCRngZCMyjzn9s79iSXehfeLsszq2bQgIxXDJVl0AAZBNrJGfcNCX2qzOwlaGK518iQlZAdtDXdLezXZBsqLDgxTRgXO4my1ZAvElHYZAF3C3a3OJ6aL0gZAF4fDMjj5Bxqg2ifiFXtlj8U07JrVWZCMdBbAuwuLtBBv21pQmhcovqtrASZC5rZBfn0cDbZBCl8s2MZD`,
-          "Access-Control-Allow-Credentials": "true",
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,DELETE,PATCH,POST,PUT",
-          "Access-Control-Allow-Headers":
-            "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+          Accept: "*/*",
         },
       });
       console.log("[imgData]", imgData);
