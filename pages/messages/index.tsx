@@ -7,8 +7,7 @@ import "../../globals.css";
 export default function WebhookPage({ data }: any) {
   const [phone, setPhone] = React.useState<any>(null);
   const [message, setMessage] = React.useState<any>(null);
-
-  React.useEffect(() => {}, []);
+  const [images, setImages] = React.useState<any>({});
 
   const sendMessageHandler = (body_param: any) => {
     const phon_no_id =
@@ -41,6 +40,50 @@ export default function WebhookPage({ data }: any) {
       });
   };
 
+  const getImage = async ({ image }: any) => {
+    try {
+      const res: any = await axios({
+        method: "GET",
+        url: `https://graph.facebook.com/v19.0/${image.id}`,
+        headers: {
+          // "Content-Type": "application/json",
+          Authorization: `Bearer EAAPpeIMSUhEBO2J5SNOw3ZCRngZCMyjzn9s79iSXehfeLsszq2bQgIxXDJVl0AAZBNrJGfcNCX2qzOwlaGK518iQlZAdtDXdLezXZBsqLDgxTRgXO4my1ZAvElHYZAF3C3a3OJ6aL0gZAF4fDMjj5Bxqg2ifiFXtlj8U07JrVWZCMdBbAuwuLtBBv21pQmhcovqtrASZC5rZBfn0cDbZBCl8s2MZD`,
+        },
+      });
+      console.log("[Success]", res.data.url);
+      const imgData: any = await axios({
+        method: "GET",
+        url: res.data.url,
+        headers: {
+          // "Content-Type": "application/json",
+          Authorization: `Bearer EAAPpeIMSUhEBO2J5SNOw3ZCRngZCMyjzn9s79iSXehfeLsszq2bQgIxXDJVl0AAZBNrJGfcNCX2qzOwlaGK518iQlZAdtDXdLezXZBsqLDgxTRgXO4my1ZAvElHYZAF3C3a3OJ6aL0gZAF4fDMjj5Bxqg2ifiFXtlj8U07JrVWZCMdBbAuwuLtBBv21pQmhcovqtrASZC5rZBfn0cDbZBCl8s2MZD`,
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,DELETE,PATCH,POST,PUT",
+          "Access-Control-Allow-Headers":
+            "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+        },
+      });
+      console.log("[imgData]", imgData);
+      setImages((prev: any) => ({ ...prev, [image.id]: res.data.url }));
+      return res.data.url;
+    } catch (error) {
+      console.log("[error]", error);
+    }
+    return null;
+  };
+
+  React.useEffect(() => {
+    console.log("[data]", data);
+    data.forEach(({ entry }: any) => {
+      entry[0].changes.forEach(({ value: { contacts, messages } }: any) => {
+        if (messages?.[0].type === "image") {
+          getImage(messages[0]);
+        }
+      });
+    });
+  }, [data]);
+
   return (
     <div>
       <h1 className="text-center font-bold my-4 text-xl">
@@ -60,29 +103,30 @@ export default function WebhookPage({ data }: any) {
                 <>
                   {entry[0].changes.map(
                     ({ value: { contacts, messages } }: any) => (
-                      <div
-                        key="messages[0].text.body"
-                        className="flex justify-end items-end flex-col p-4"
-                      >
-                        {messages[0].type === "text" ? (
-                          <div className="bg-blue-500 text-white rounded-lg p-2">
-                            <p className="text-sm">{messages[0].text.body}</p>
-                          </div>
-                        ) : (
-                          <div className="bg-red-500 text-white rounded-lg p-2">
-                            <p className="text-sm">
-                              We are currently handling text messages only!
-                            </p>
+                      <>
+                        {messages?.[0].type === "image" && (
+                          <div
+                            key={messages[0].image.id}
+                            className="flex justify-end items-end flex-col p-4"
+                          >
+                            <div className="bg-blue-500 text-white rounded-lg p-2">
+                              <p className="text-sm">
+                                {messages[0].image.id}
+                                {images[messages[0].image.id] && (
+                                  <p>{images[messages[0].image.id]}</p>
+                                )}
+                              </p>
+                            </div>
+                            <p>{contacts[0].profile.name}</p>
                           </div>
                         )}
-                        <p>{contacts[0].profile.name}</p>
-                      </div>
+                      </>
                     )
                   )}
                 </>
               ))}
 
-            <div className="flex justify-between items-center p-2 flex-cold">
+            {/* <div className="flex justify-between items-center p-2 flex-cold">
               <input
                 type="text"
                 placeholder="Type phone number"
@@ -101,7 +145,7 @@ export default function WebhookPage({ data }: any) {
               >
                 Send
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -111,7 +155,7 @@ export default function WebhookPage({ data }: any) {
 
 export async function getStaticProps() {
   await connectToDatabase();
-  const res: any = await MessagesModel.find();
+  const res: any = await MessagesModel.find({});
   return {
     props: {
       data: JSON.parse(JSON.stringify(res)),
