@@ -5,7 +5,7 @@ import Masonry from "react-masonry-css";
 const MasonryGallery = ({ images }: any) => {
   return (
     <Masonry
-      breakpointCols={{ default: 3, 1100: 2, 700: 1 }}
+      breakpointCols={{ default: 4, 1100: 2, 700: 1 }}
       className="my-masonry-grid"
       columnClassName="my-masonry-grid_column"
     >
